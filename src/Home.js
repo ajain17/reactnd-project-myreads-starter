@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import * as BooksAPI from "./BooksAPI";
 import BookShelf from "./BookShelf";
+import { Options } from "./Models";
 
 class Home extends Component {
   state = {
@@ -15,6 +16,8 @@ class Home extends Component {
   }
 
   render() {
+    let options = Options;
+    let index = 0;
     return (
       <>
         <div className="list-books">
@@ -22,22 +25,15 @@ class Home extends Component {
             <h1>MyReads</h1>
           </div>
 
-          <BookShelf
-            allBooks={this.state.allBooks.filter(
-              book => book.shelf === "currentlyReading"
-            )}
-            section="CurrentlyReading"
-          />
-          <BookShelf
-            allBooks={this.state.allBooks.filter(
-              book => book.shelf === "wantToRead"
-            )}
-            section="Want To Read"
-          />
-          <BookShelf
-            allBooks={this.state.allBooks.filter(book => book.shelf === "read")}
-            section="Read"
-          />
+          {Object.keys(options).map(option => (
+            <BookShelf
+              key={index++}
+              allBooks={this.state.allBooks.filter(
+                book => book.shelf === option
+              )}
+              section={options[option]}
+            />
+          ))}
         </div>
       </>
     );

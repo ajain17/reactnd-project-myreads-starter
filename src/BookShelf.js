@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
+import BookShelfChanger from "./BookShelfChanger";
 
 class BookShelf extends React.Component {
   constructor() {
@@ -26,19 +27,7 @@ class BookShelf extends React.Component {
                             backgroundImage: `url(${book.imageLinks.thumbnail})`
                           }}
                         />
-                        <div className="book-shelf-changer">
-                          <select>
-                            <option value="move" disabled>
-                              Move to...
-                            </option>
-                            <option value="currentlyReading">
-                              Currently Reading
-                            </option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
-                            <option value="none">None</option>
-                          </select>
-                        </div>
+                        <BookShelfChanger currentShelf={book.shelf} />
                       </div>
                       <div className="book-title">{book.title}</div>
                       <div className="book-authors">
