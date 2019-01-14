@@ -15,14 +15,13 @@ class Search extends React.Component {
 
   handleChange(event) {
     this.setState({ query: event.target.value });
-    BooksAPI.search(this.state.query).then(allBooks =>
+    BooksAPI.search(event.target.value.trim()).then(allBooks =>
       this.setState({ allBooks })
     );
   }
 
   render() {
-    // console.log(this.state.allBooks && this.state.allBooks.length);
-    console.log(this.state.query);
+    console.log(this.state);
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -39,19 +38,21 @@ class Search extends React.Component {
             />
           </div>
         </div>
-
-        <div className="search-books-results">
-          <ol className="books-grid">
-            {this.state.allBooks &&
-              this.state.allBooks.map(book => (
+        {this.state.allBooks && this.state.allBooks instanceof Array ? (
+          <div className="search-books-results">
+            <ol className="books-grid">
+              {this.state.allBooks.map(book => (
                 <Book
                   key={book.id}
                   book={book}
                   selectShelf={e => this.selectShelf(e, book.id)}
                 />
               ))}
-          </ol>
-        </div>
+            </ol>
+          </div>
+        ) : (
+          <h2 className="no-results"> No results found!! </h2>
+        )}
       </div>
     );
   }
