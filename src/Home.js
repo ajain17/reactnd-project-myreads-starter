@@ -1,37 +1,9 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
-import * as BooksAPI from "./Api/BooksAPI";
 import Book from "./Book";
 import { Options } from "./Models";
-
 class Home extends React.Component {
-  state = {
-    allBooks: []
-  };
-
-  constructor() {
-    super();
-    BooksAPI.getAll().then(allBooks => {
-      this.setState({ allBooks });
-    });
-    this.selectShelf = this.selectShelf.bind(this);
-  }
-
-  selectShelf(event, bookId) {
-    let bookIndex = this.state.allBooks.findIndex(book => book.id === bookId);
-    if (bookIndex >= 0) {
-      let bookToUpdate = this.state.allBooks[bookIndex];
-      bookToUpdate["shelf"] = event.target.value;
-      this.setState({
-        allBooks: [
-          ...this.state.allBooks.slice(0, bookIndex),
-          bookToUpdate,
-          ...this.state.allBooks.slice(bookIndex + 1)
-        ]
-      });
-    }
-  }
-
   render() {
     let index = 0;
     return (
@@ -45,19 +17,19 @@ class Home extends React.Component {
             <div key={index++} className="list-books-content">
               <div>
                 <div className="bookshelf">
-                  {this.state.allBooks.filter(b => b.shelf === section).length >
+                  {this.props.myBooks.filter(b => b.shelf === section).length >
                     0 && (
                     <>
                       <h2 className="bookshelf-title">{Options[section]}</h2>
                       <div className="bookshelf-books">
                         <ol className="books-grid">
-                          {this.state.allBooks
+                          {this.props.myBooks
                             .filter(book => book.shelf === section)
                             .map(book => (
                               <Book
                                 key={book.id}
                                 book={book}
-                                selectShelf={e => this.selectShelf(e, book.id)}
+                                selectShelf={this.props.onChange}
                               />
                             ))}
                         </ol>
@@ -78,5 +50,10 @@ class Home extends React.Component {
     );
   }
 }
+
+Home.propTypes = {
+  // book: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired
+};
 
 export default Home;

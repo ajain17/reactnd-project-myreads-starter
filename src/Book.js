@@ -36,6 +36,7 @@ class Book extends React.Component {
                 <BookShelfChanger
                   currentShelf={this.props.book.shelf}
                   selectShelf={this.props.selectShelf}
+                  bookId={this.props.book.id}
                 />
               </div>
               <div className="book-title">{this.props.book.title}</div>
