@@ -3,6 +3,21 @@ import React from "react";
 import BookShelfChanger from "./BookShelfChanger";
 
 class Book extends React.Component {
+  //Some book objects do not have imageLinks property; UI breaks without null checks
+  getBackground = () => {
+    let backgroundImage = "";
+    if (this.props.book.imageLinks) {
+      backgroundImage =
+        this.props.book.imageLinks.thumbnail !== null
+          ? this.props.book.imageLinks.thumbnail
+          : this.props.book.imageLinks.smallThumbnail !== null
+          ? this.props.book.imageLinks.smallThumbnail
+          : "";
+    }
+
+    return backgroundImage;
+  };
+
   render() {
     return (
       <>
@@ -15,9 +30,7 @@ class Book extends React.Component {
                   style={{
                     width: 128,
                     height: 193,
-                    backgroundImage: `url(${
-                      this.props.book.imageLinks.thumbnail
-                    })`
+                    backgroundImage: `url(${this.getBackground()})`
                   }}
                 />
                 <BookShelfChanger
@@ -27,9 +40,9 @@ class Book extends React.Component {
               </div>
               <div className="book-title">{this.props.book.title}</div>
               <div className="book-authors">
-                {this.props.book.authors.length === 1
-                  ? this.props.book.authors[0]
-                  : this.props.book.authors.join(", ")}
+                {this.props.book.authors && this.props.book.authors.length > 0
+                  ? this.props.book.authors.join(", ")
+                  : ""}
               </div>
             </div>
           </li>
