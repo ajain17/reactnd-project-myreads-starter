@@ -29,7 +29,7 @@ const BookShelfChanger = props => {
 };
 
 BookShelfChanger.propTypes = {
-  currentShelf: PropTypes.string.isRequired,
+  currentShelf: PropTypes.string,
   selectShelf: PropTypes.func.isRequired
 };
 

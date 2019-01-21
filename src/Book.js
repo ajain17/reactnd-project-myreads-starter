@@ -18,6 +18,13 @@ class Book extends React.Component {
     return backgroundImage;
   };
 
+  // for books with no shelf, as returned by search API, assign them to none to render correctly in UI
+  getCurrentShelf = () => {
+    if (!this.props.book.shelf) return "none";
+
+    return this.props.book.shelf;
+  };
+
   render() {
     return (
       <>
@@ -34,7 +41,7 @@ class Book extends React.Component {
                   }}
                 />
                 <BookShelfChanger
-                  currentShelf={this.props.book.shelf}
+                  currentShelf={this.getCurrentShelf()}
                   selectShelf={this.props.selectShelf}
                   bookId={this.props.book.id}
                 />
