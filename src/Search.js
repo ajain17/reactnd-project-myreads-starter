@@ -1,12 +1,13 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "./Api/BooksAPI";
 import Book from "./Book";
+
 class Search extends React.Component {
   state = {
     query: "",
-    allBooks: [],
-    myBooks: []
+    allBooks: []
   };
 
   constructor(props) {
@@ -24,7 +25,7 @@ class Search extends React.Component {
           update shelf for this book based on selection in my books
           since search api doesn't return shelf information
           */
-        this.state.myBooks.map(myBook => {
+        this.props.myBooks.map(myBook => {
           let myBookInSearchResultsIndex = this.state.allBooks.findIndex(
             b => b.id === myBook.id
           );
@@ -45,12 +46,6 @@ class Search extends React.Component {
     });
   }
 
-  componentDidMount() {
-    BooksAPI.getAll().then(myBooks => {
-      this.setState({ myBooks });
-    });
-  }
-
   selectShelf(event, bookId) {
     let bookIndex = this.state.allBooks.findIndex(book => book.id === bookId);
     // a safety check, should always result to true
@@ -66,7 +61,7 @@ class Search extends React.Component {
       });
 
       // also update book in the backend
-      BooksAPI.update(bookToUpdate, event.target.value);
+      this.props.onUpdate(bookToUpdate, event.target.value);
     }
   }
 
@@ -108,3 +103,8 @@ class Search extends React.Component {
 }
 
 export default Search;
+
+Search.propTypes = {
+  myBooks: PropTypes.array,
+  onUpdate: PropTypes.func.isRequired
+};

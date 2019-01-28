@@ -1,40 +1,30 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
-import * as BooksAPI from "./Api/BooksAPI";
 import Book from "./Book";
 import { Options } from "./Models";
 
 class Home extends React.Component {
-  state = {
-    myBooks: []
-  };
-
   constructor(props) {
     super(props);
     this.selectShelf = this.selectShelf.bind(this);
   }
 
-  componentDidMount() {
-    BooksAPI.getAll().then(myBooks => {
-      this.setState({ myBooks });
-    });
-  }
-
   selectShelf(event, bookId) {
-    let bookIndex = this.state.myBooks.findIndex(book => book.id === bookId);
+    let bookIndex = this.props.myBooks.findIndex(book => book.id === bookId);
     // a safety check, should always result to true
     if (bookIndex >= 0) {
-      let bookToUpdate = this.state.myBooks[bookIndex];
+      let bookToUpdate = this.props.myBooks[bookIndex];
       bookToUpdate["shelf"] = event.target.value;
       this.setState({
         myBooks: [
-          ...this.state.myBooks.slice(0, bookIndex),
+          ...this.props.myBooks.slice(0, bookIndex),
           bookToUpdate,
-          ...this.state.myBooks.slice(bookIndex + 1)
+          ...this.props.myBooks.slice(bookIndex + 1)
         ]
       });
 
-      BooksAPI.update(bookToUpdate, event.target.value);
+      this.props.onUpdate(bookToUpdate, event.target.value);
     }
   }
 
@@ -51,13 +41,13 @@ class Home extends React.Component {
             <div key={index++} className="list-books-content">
               <div>
                 <div className="bookshelf">
-                  {this.state.myBooks.filter(b => b.shelf === section).length >
+                  {this.props.myBooks.filter(b => b.shelf === section).length >
                     0 && (
                     <>
                       <h2 className="bookshelf-title">{Options[section]}</h2>
                       <div className="bookshelf-books">
                         <ol className="books-grid">
-                          {this.state.myBooks
+                          {this.props.myBooks
                             .filter(book => book.shelf === section)
                             .map(book => (
                               <Book
@@ -86,3 +76,8 @@ class Home extends React.Component {
 }
 
 export default Home;
+
+Home.propTypes = {
+  myBooks: PropTypes.array,
+  onUpdate: PropTypes.func.isRequired
+};
